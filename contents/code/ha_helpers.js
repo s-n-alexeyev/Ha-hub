@@ -1,7 +1,16 @@
 // Translation helper: i18n() is provided by Plasma's QML context; fall back to the
 // English source when unavailable. Extra args replace %1, %2, ...
+// A translator can be handed in from QML (setTranslator below) so the strings a
+// helper picks by itself - a binary sensor's state, chosen from the entity's
+// class - follow the language the widget was configured to, not the system's.
+// Without one, the Plasma context's i18n() is used, and failing that the English
+// source is returned with its placeholders filled in.
+var translate = null;
+function setTranslator(fn) { translate = fn; }
+
 function tr(text) {
     var args = Array.prototype.slice.call(arguments, 1);
+    if (translate) return translate(text, args);
     if (typeof i18n === "function") return i18n.apply(null, [text].concat(args));
     return text.replace(/%(\d+)/g, function(m, n) { var v = args[n - 1]; return v === undefined ? m : v; });
 }

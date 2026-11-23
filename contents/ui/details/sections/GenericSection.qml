@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components 3.0 as PlasmaComponents3
+import "../../../l10n"
 
 Rectangle {
     id: genSec
@@ -20,11 +21,11 @@ Rectangle {
         anchors.margins: Kirigami.Units.smallSpacing * 1.5
         spacing: Kirigami.Units.smallSpacing
 
-        PlasmaComponents3.Label { text: i18n("CURRENT STATE"); font.bold: true; font.pointSize: Kirigami.Theme.smallFont.pointSize * 0.75; color: Kirigami.Theme.disabledTextColor }
+        PlasmaComponents3.Label { text: Loc.t("CURRENT STATE"); font.bold: true; font.pointSize: Kirigami.Theme.smallFont.pointSize * 0.75; color: Kirigami.Theme.disabledTextColor }
 
         PlasmaComponents3.Label {
             text: {
-                if (!detailsPage.primaryEntityObj) return i18n("Unavailable");
+                if (!detailsPage.primaryEntityObj) return Loc.t("Unavailable");
                 var st = detailsPage.primaryEntityObj.state;
                 var u = (detailsPage.primaryEntityObj.attributes && detailsPage.primaryEntityObj.attributes.unit_of_measurement) ? (" " + detailsPage.primaryEntityObj.attributes.unit_of_measurement) : "";
                 return st + u;

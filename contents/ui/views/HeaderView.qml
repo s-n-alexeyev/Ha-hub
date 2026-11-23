@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.kirigami as Kirigami
+import "../../l10n"
 
 Item {
     id: headerView
@@ -17,9 +18,9 @@ Item {
     readonly property bool narrow: width < Kirigami.Units.gridUnit * 15
 
     readonly property var viewModes: [
-        { mode: "rows",  icon: "rows",  label: i18n("Rows") },
-        { mode: "tiles", icon: "grid",  label: i18n("Tiles") },
-        { mode: "cards", icon: "cards", label: i18n("Cards") }
+        { mode: "rows",  icon: "rows",  label: Loc.t("Rows") },
+        { mode: "tiles", icon: "grid",  label: Loc.t("Tiles") },
+        { mode: "cards", icon: "cards", label: Loc.t("Cards") }
     ]
     readonly property var currentMode: {
         var m = fullRoot ? fullRoot.viewMode : "rows";
@@ -78,8 +79,8 @@ Item {
 
             PlasmaComponents3.Label {
                 text: {
-                    if (!haManager) return i18n("Disconnected");
-                    if (!haManager.isConnected) return haManager.connectionStatus || i18n("Disconnected");
+                    if (!haManager) return Loc.t("Disconnected");
+                    if (!haManager.isConnected) return haManager.connectionStatus || Loc.t("Disconnected");
                     return i18np("%1 entity", "%1 entities", haManager.entityCount);
                 }
                 font: Kirigami.Theme.smallFont
@@ -92,7 +93,7 @@ Item {
         PlasmaComponents3.ToolButton {
             visible: haManager && !headerView.connected
             icon.name: "view-refresh-symbolic"
-            text: i18n("Reconnect")
+            text: Loc.t("Reconnect")
             display: headerView.narrow ? PlasmaComponents3.AbstractButton.IconOnly : PlasmaComponents3.AbstractButton.TextBesideIcon
             PlasmaComponents3.ToolTip.text: text
             PlasmaComponents3.ToolTip.visible: hovered && headerView.narrow
@@ -103,10 +104,10 @@ Item {
             visible: headerView.connected
             icon.source: Qt.resolvedUrl("../../icons/search.svg")
             display: PlasmaComponents3.AbstractButton.IconOnly
-            text: i18n("Search")
+            text: Loc.t("Search")
             checkable: true
             checked: fullRoot ? fullRoot.showSearchBar : false
-            PlasmaComponents3.ToolTip.text: i18n("Search (Esc to close)")
+            PlasmaComponents3.ToolTip.text: Loc.t("Search (Esc to close)")
             PlasmaComponents3.ToolTip.visible: hovered
             onClicked: headerView.toggleSearchRequested()
         }
@@ -116,7 +117,7 @@ Item {
             visible: headerView.connected
             icon.source: Qt.resolvedUrl("../../icons/" + headerView.currentMode.icon + ".svg")
             display: PlasmaComponents3.AbstractButton.IconOnly
-            text: i18n("View: %1", headerView.currentMode.label)
+            text: Loc.t("View: %1", headerView.currentMode.label)
             down: viewMenu.opened || pressed
             PlasmaComponents3.ToolTip.text: text
             PlasmaComponents3.ToolTip.visible: hovered && !viewMenu.opened
@@ -141,7 +142,7 @@ Item {
         PlasmaComponents3.ToolButton {
             icon.name: "configure"
             display: PlasmaComponents3.AbstractButton.IconOnly
-            text: i18n("Settings")
+            text: Loc.t("Settings")
             PlasmaComponents3.ToolTip.text: text
             PlasmaComponents3.ToolTip.visible: hovered
             onClicked: headerView.configureRequested()

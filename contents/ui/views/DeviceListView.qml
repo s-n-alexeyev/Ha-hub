@@ -5,6 +5,7 @@ import org.kde.plasma.plasmoid
 import org.kde.kirigami as Kirigami
 import "../components" as Components
 import "../../code/ha_helpers.js" as HAHelpers
+import "../../l10n"
 
 ColumnLayout {
     id: listViewRoot
@@ -46,11 +47,11 @@ ColumnLayout {
     }
 
     readonly property var tabs: [
-        { title: i18n("Favorites"), icon: "star",      tip: i18n("Favorite devices") },
-        { title: i18n("Lights"),      icon: "lightbulb", tip: i18n("Lights, plugs and switches") },
-        { title: i18n("Sensors"),   icon: "temperature", tip: i18n("Sensors and climate") },
-        { title: i18n("More"),     icon: "speaker",   tip: i18n("Media, covers, locks, scenes and scripts") },
-        { title: i18n("All"),     icon: "list",      tip: i18n("All visible entities") }
+        { title: Loc.t("Favorites"), icon: "star",      tip: Loc.t("Favorite devices") },
+        { title: Loc.t("Lights"),      icon: "lightbulb", tip: Loc.t("Lights, plugs and switches") },
+        { title: Loc.t("Sensors"),   icon: "temperature", tip: Loc.t("Sensors and climate") },
+        { title: Loc.t("More"),     icon: "speaker",   tip: Loc.t("Media, covers, locks, scenes and scripts") },
+        { title: Loc.t("All"),     icon: "list",      tip: Loc.t("All visible entities") }
     ]
 
     readonly property var currentTabEntities: {
@@ -106,7 +107,7 @@ ColumnLayout {
         PlasmaComponents3.TextField {
             id: searchField
             Layout.fillWidth: true
-            placeholderText: i18n("Search by name, room or ID…")
+            placeholderText: Loc.t("Search by name, room or ID…")
             clearButtonShown: true
             text: listViewRoot.searchQuery
             onTextChanged: listViewRoot.searchQuery = text
@@ -120,7 +121,7 @@ ColumnLayout {
             visible: listViewRoot.areaNames.length > 0
             implicitWidth: listViewRoot.narrow ? Kirigami.Units.gridUnit * 6 : Kirigami.Units.gridUnit * 8
             Layout.preferredHeight: searchField.implicitHeight
-            model: [i18n("All rooms")].concat(listViewRoot.areaNames)
+            model: [Loc.t("All rooms")].concat(listViewRoot.areaNames)
             currentIndex: listViewRoot.areaFilter ? Math.max(0, listViewRoot.areaNames.indexOf(listViewRoot.areaFilter) + 1) : 0
             onActivated: function(index) {
                 listViewRoot.areaFilter = index <= 0 ? "" : listViewRoot.areaNames[index - 1];
@@ -168,20 +169,20 @@ ColumnLayout {
                 return Qt.resolvedUrl("../../icons/" + listViewRoot.tabs[Math.min(listViewRoot.activeTab, 4)].icon + ".svg");
             }
             text: {
-                if (listViewRoot.searchQuery.length > 0) return i18n("No results for “%1”", listViewRoot.searchQuery);
-                if (listViewRoot.areaFilter.length > 0) return i18n("Nothing here in %1", listViewRoot.areaFilter);
-                if (listViewRoot.activeTab === 0) return i18n("No favorites");
-                if (!haManager || haManager.allEntitiesList.length === 0) return i18n("Loading…");
-                return i18n("No entities in this category");
+                if (listViewRoot.searchQuery.length > 0) return Loc.t("No results for “%1”", listViewRoot.searchQuery);
+                if (listViewRoot.areaFilter.length > 0) return Loc.t("Nothing here in %1", listViewRoot.areaFilter);
+                if (listViewRoot.activeTab === 0) return Loc.t("No favorites");
+                if (!haManager || haManager.allEntitiesList.length === 0) return Loc.t("Loading…");
+                return Loc.t("No entities in this category");
             }
             explanation: (listViewRoot.activeTab === 0 && listViewRoot.searchQuery.length === 0 && listViewRoot.areaFilter.length === 0)
-                ? i18n("Hover a device and click the star, or right-click it.")
+                ? Loc.t("Hover a device and click the star, or right-click it.")
                 : ""
             helpfulAction: (listViewRoot.activeTab === 0 && listViewRoot.searchQuery.length === 0) ? exploreAction : null
 
             Kirigami.Action {
                 id: exploreAction
-                text: i18n("Browse all devices")
+                text: Loc.t("Browse all devices")
                 icon.name: "view-list-tree-symbolic"
                 onTriggered: listViewRoot.activeTab = 4
             }

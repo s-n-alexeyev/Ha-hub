@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.kirigami as Kirigami
+import "../../l10n"
 
 // "Card": Liquid Glass style. Everything is derived from Kirigami.Theme,
 // so the card follows the system color scheme live.
@@ -114,7 +115,7 @@ PlasmaComponents3.ItemDelegate {
                 display: PlasmaComponents3.AbstractButton.IconOnly
                 visible: cardRoot.hovered || ent.isFavorite
                 opacity: ent.isFavorite ? 0.9 : 0.6
-                text: ent.isFavorite ? i18n("Remove from favorites") : i18n("Add to favorites")
+                text: ent.isFavorite ? Loc.t("Remove from favorites") : Loc.t("Add to favorites")
                 PlasmaComponents3.ToolTip.text: text
                 PlasmaComponents3.ToolTip.visible: hovered
                 onClicked: ent.toggleFavorite()
@@ -132,7 +133,7 @@ PlasmaComponents3.ItemDelegate {
                 enabled: !ent.isUnavailable
                 icon.name: ent.isActionable ? "media-playback-start-symbolic" : ent.quickToggleIcon
                 display: PlasmaComponents3.AbstractButton.IconOnly
-                text: ent.isActionable ? i18n("Run") : ent.quickToggleTooltip
+                text: ent.isActionable ? Loc.t("Run") : ent.quickToggleTooltip
                 PlasmaComponents3.ToolTip.text: text
                 PlasmaComponents3.ToolTip.visible: hovered
                 onClicked: ent.isActionable ? ent.activate() : ent.quickToggle()

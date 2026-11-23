@@ -1,6 +1,7 @@
 import QtQuick
 import org.kde.plasma.plasmoid
 import "../../code/ha_helpers.js" as HAHelpers
+import "../../l10n"
 
 // Shared, non-visual view-model for one Home Assistant entity.
 // Used by CompactDeviceRow, CompactDeviceTile and GlassDeviceCard.
@@ -61,9 +62,9 @@ QtObject {
         return "";
     }
     readonly property string quickToggleTooltip: {
-        if (domain === "cover") return (rawState === "open" || rawState === "opening") ? i18n("Close") : i18n("Open");
-        if (domain === "lock") return rawState === "locked" ? i18n("Unlock") : i18n("Lock");
-        if (domain === "media_player") return rawState === "playing" ? i18n("Pause") : i18n("Play");
+        if (domain === "cover") return (rawState === "open" || rawState === "opening") ? Loc.t("Close") : Loc.t("Open");
+        if (domain === "lock") return rawState === "locked" ? Loc.t("Unlock") : Loc.t("Lock");
+        if (domain === "media_player") return rawState === "playing" ? Loc.t("Pause") : Loc.t("Play");
         return "";
     }
 

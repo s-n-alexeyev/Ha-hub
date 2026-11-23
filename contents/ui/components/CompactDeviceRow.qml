@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.kirigami as Kirigami
+import "../../l10n"
 
 // "Righe": dense one-line list item.
 PlasmaComponents3.ItemDelegate {
@@ -103,7 +104,7 @@ PlasmaComponents3.ItemDelegate {
             visible: (rowRoot.hovered || ent.isFavorite) && rowRoot.width > Kirigami.Units.gridUnit * 14
             icon.name: ent.isFavorite ? "starred-symbolic" : "non-starred-symbolic"
             display: PlasmaComponents3.AbstractButton.IconOnly
-            text: ent.isFavorite ? i18n("Remove from favorites") : i18n("Add to favorites")
+            text: ent.isFavorite ? Loc.t("Remove from favorites") : Loc.t("Add to favorites")
             PlasmaComponents3.ToolTip.text: text
             PlasmaComponents3.ToolTip.visible: hovered
             onClicked: ent.toggleFavorite()
@@ -122,7 +123,7 @@ PlasmaComponents3.ItemDelegate {
             enabled: !ent.isUnavailable
             icon.name: ent.isActionable ? "media-playback-start-symbolic" : ent.quickToggleIcon
             display: PlasmaComponents3.AbstractButton.IconOnly
-            text: ent.isActionable ? i18n("Run") : ent.quickToggleTooltip
+            text: ent.isActionable ? Loc.t("Run") : ent.quickToggleTooltip
             PlasmaComponents3.ToolTip.text: text
             PlasmaComponents3.ToolTip.visible: hovered
             onClicked: ent.isActionable ? ent.activate() : ent.quickToggle()

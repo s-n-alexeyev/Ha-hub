@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.kirigami as Kirigami
+import "../../l10n"
 
 // "Tessere": compact grid tile. Click the icon to toggle, the tile to open details.
 PlasmaComponents3.ItemDelegate {
@@ -42,12 +43,12 @@ PlasmaComponents3.ItemDelegate {
     PlasmaComponents3.Menu {
         id: contextMenu
         PlasmaComponents3.MenuItem {
-            text: ent.isFavorite ? i18n("Remove from favorites") : i18n("Add to favorites")
+            text: ent.isFavorite ? Loc.t("Remove from favorites") : Loc.t("Add to favorites")
             icon.name: ent.isFavorite ? "non-starred-symbolic" : "starred-symbolic"
             onTriggered: ent.toggleFavorite()
         }
         PlasmaComponents3.MenuItem {
-            text: i18n("Details")
+            text: Loc.t("Details")
             icon.name: "documentinfo"
             onTriggered: tileRoot.openDetailsRequested(ent.cleanId)
         }
@@ -62,7 +63,7 @@ PlasmaComponents3.ItemDelegate {
             unavailable: ent.isUnavailable
             interactive: ent.isToggleable || ent.isActionable || ent.hasQuickToggle
             onClicked: ent.toggle()
-            PlasmaComponents3.ToolTip.text: ent.isToggleable ? (ent.isOn ? i18n("Turn off") : i18n("Turn on")) : (ent.isActionable ? i18n("Run") : ent.quickToggleTooltip)
+            PlasmaComponents3.ToolTip.text: ent.isToggleable ? (ent.isOn ? Loc.t("Turn off") : Loc.t("Turn on")) : (ent.isActionable ? Loc.t("Run") : ent.quickToggleTooltip)
             PlasmaComponents3.ToolTip.visible: interactive && hoveredIcon.hovered
             HoverHandler { id: hoveredIcon }
         }

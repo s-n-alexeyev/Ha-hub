@@ -5,6 +5,8 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
 import "../services" as Services
 import "components" as Components
+import "../l10n"
+import "../code/ha_helpers.js" as HAHelpers
 
 PlasmoidItem {
     id: root
@@ -27,9 +29,9 @@ PlasmoidItem {
         : "HA-Hub"
 
     toolTipSubText: {
-        if (!haManagerService) return i18n("Disconnected");
-        if (!haManagerService.isConnected) return haManagerService.connectionStatus || i18n("Disconnected");
-        return i18n("Connected · %1 entities", haManagerService.entityCount);
+        if (!haManagerService) return Loc.t("Disconnected");
+        if (!haManagerService.isConnected) return haManagerService.connectionStatus || Loc.t("Disconnected");
+        return Loc.t("Connected · %1 entities", haManagerService.entityCount);
     }
 
     readonly property string desktopEntityId: Plasmoid.configuration.desktopEntityId || ""
@@ -61,6 +63,22 @@ PlasmoidItem {
         }
     }
 
+    // Hands the language saved in Settings to this engine's Loc singleton. The
+    // singleton lives in the engine's root context and cannot see Plasma's
+    // `Plasmoid`, so the configuration is handed to the bridge from here.
+    Components.LanguageBridge {
+        id: appletLanguageBridge
+        configuration: Plasmoid.configuration
+    }
+
+    // The configuration reports only the keys its property map changes; a value
+    // that moved while nobody was listening has to be asked for. Opening the
+    // popup is that moment.
+    onExpandedChanged: {
+        if (root.expanded)
+            appletLanguageBridge.recheck()
+    }
+
     Services.HAManager {
         id: haManagerService
         host: Plasmoid.configuration.host || ""
@@ -71,6 +89,14 @@ PlasmoidItem {
     }
 
     Component.onCompleted: {
+        // The helper functions translate strings that no Loc.t() call site can
+        // name (a binary sensor's state is chosen from the entity's class), so
+        // the translator is handed to the plain .js helper as a function.
+        if (typeof HAHelpers.setTranslator === "function") {
+            HAHelpers.setTranslator(function(text, args) {
+                return Loc.t.apply(Loc, [text].concat(args || []));
+            });
+        }
         haManagerService.startAutoConnect();
     }
 

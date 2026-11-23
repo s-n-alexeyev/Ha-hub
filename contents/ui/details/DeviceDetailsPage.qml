@@ -6,6 +6,7 @@ import org.kde.kirigami as Kirigami
 import "../../services" as Services
 import "../../code/ha_helpers.js" as HAHelpers
 import "sections" as Sections
+import "../../l10n"
 
 PlasmaComponents3.Page {
     id: detailsPage
@@ -315,7 +316,7 @@ PlasmaComponents3.Page {
 
             PlasmaComponents3.ToolButton {
                 icon.name: "go-previous"
-                text: i18n("Back")
+                text: Loc.t("Back")
                 onClicked: detailsPage.backRequested()
             }
 
@@ -334,7 +335,7 @@ PlasmaComponents3.Page {
                 RowLayout {
                     spacing: 4
                     PlasmaComponents3.Label {
-                        text: (detailsPage.areaName ? (detailsPage.areaName + " • ") : "") + (detailsPage.deviceRaw ? (detailsPage.deviceRaw.model || "Smart Device") : i18n("Device"))
+                        text: (detailsPage.areaName ? (detailsPage.areaName + " • ") : "") + (detailsPage.deviceRaw ? (detailsPage.deviceRaw.model || "Smart Device") : Loc.t("Device"))
                         font.pointSize: Kirigami.Theme.smallFont.pointSize * 0.82
                         color: Kirigami.Theme.disabledTextColor
                         elide: Text.ElideRight
