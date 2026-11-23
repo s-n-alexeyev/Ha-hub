@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [test-plazmoid, main]
+  pull_request:
+
+jobs:
+  js-tests:
+    name: JS unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run JS tests
+        run: node --test tests/js/*.test.js
+
+  validate:
+    name: Validate package metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check metadata.json
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          meta = json.load(open("metadata.json"))
+          plugin = meta["KPlugin"]
+          assert meta["KPackageStructure"] == "Plasma/Applet"
+          for key in ("Id", "Name", "Version", "License"):
+              assert plugin.get(key), f"missing KPlugin.{key}"
+          # Plasma reads this one next to KPlugin, not inside it.
+          api = meta.get("X-Plasma-API-Minimum-Version", plugin.get("X-Plasma-API-Minimum-Version"))
+          assert api == "6.0", f"X-Plasma-API-Minimum-Version is {api!r}"
+          # A language offered in settings that the store cannot describe reads as
+          # English to someone browsing in it.
+          offered = json.loads(subprocess.run(
+              ["node", "--input-type=module", "-e",
+               "import('./contents/l10n/translations.mjs').then(m=>process.stdout.write(JSON.stringify(m.LANGUAGES.map(l=>l.code))))"],
+              capture_output=True, text=True).stdout)
+          missing = [c for c in offered if c != "en" and not meta.get("Description[" + c + "]")]
+          assert not missing, f"metadata.json has no Description[<code>] for {missing}"
+          PY
+      - name: Check kcfg XML
+        run: python3 -c "import xml.dom.minidom as m; m.parse('contents/config/main.xml')"
+      - name: Check relative QML imports
+        run: python3 scripts/check_imports.py
+
+  package:
+    name: Build .plasmoid
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package
+        run: ./scripts/make-plasmoid.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hahub-plasmoid
+          path: dist/*.plasmoid

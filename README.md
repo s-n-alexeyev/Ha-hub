@@ -41,7 +41,7 @@ Native, lightweight, and responsive Home Assistant monitoring and control widget
 - **Favorite Devices Manager:** Simple search, filtering, and custom ordering for your pinned devices.
 - **Three views:** compact rows, tiles and Liquid Glass cards, with adjustable corner radius and background opacity.
 - **Native Look & Feel:** Seamless integration with your KDE color scheme and font settings using Kirigami and PlasmaComponents 3.0.
-- **Internationalization (i18n):** Clean base English interface ready for community translations (Italian included).
+- **Internationalization:** 32 built-in languages, each catalog complete and checked by tests; chosen in Settings and applied to a running widget without restarting Plasma.
 
 ---
 
@@ -114,11 +114,27 @@ Run `translate/build.sh --package` to build the `.plasmoid` archive.
 
 ## Translating
 
-1. Copy `translate/template.pot` to `translate/<lang>.po` and translate it.
-2. Run `translate/build.sh` to compile it into the package.
+The interface strings live in `contents/l10n/catalogs/<code>.js`: a flat object
+from the English source text to the translation, one file per language. `%1`,
+`%2` keep their place in the sentence. A key a catalog does not have falls back to
+English, so a partially finished language is safe to ship — but the tests refuse a
+catalog that is missing a key the code asks for, so a language is either complete
+or not offered.
+
+To add one:
+
+1. `node scripts/new-catalog.mjs <code> "<Autonym>" <values.json>` — it writes the
+   catalog and registers the language in `contents/l10n/translations.mjs`; the
+   setting needs no change, it stores a code.
+2. `node --test tests/js/*.test.js` — it checks the catalogs against the call sites
+   in the QML, the placeholders in each value, and the language count in the README.
 3. Open a pull request.
 
----
+The strings a helper function chooses by itself — a binary sensor's state, decided
+from the entity's class — are translated by the same catalogs: QML hands the helper
+a translator at startup. `translate/*.po` and the compiled `contents/locale/` stay
+behind the one plural form left on Plasma's `i18np()` ("1 entity" / "5 entities").
+
 
 ## Feedback & Community
 
